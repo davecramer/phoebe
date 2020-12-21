@@ -76,4 +76,9 @@ public class FieldDescription {
     public TypeFormat getFormat() {
         return format;
     }
+
+    @Override
+    public String toString(){
+        return "Name: " + name;
+    }
 }

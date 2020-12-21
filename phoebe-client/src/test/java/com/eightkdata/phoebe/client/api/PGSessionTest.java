@@ -17,9 +17,7 @@
 
 package com.eightkdata.phoebe.client.api;
 
-import com.eightkdata.phoebe.common.messages.ReadyForQuery;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 import static com.eightkdata.phoebe.common.PostgresEncoding.UTF8;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -34,34 +32,49 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  */
 public class PGSessionTest extends AbstractTest {
 
-//    @Test
-//    @Category({ExternalDatabase.class})
-//    public void testStart() throws Throwable {
-//        String username = props.getProperty("db.user");
-//        String database = props.getProperty("db.name");
-//        session.start(new StartupCommand(username, null, database, UTF8) {
-//            @Override
-//            public void onCompleted(ReadyForQuery message) {
-//                waiter.assertTrue(true);
-//                waiter.resume();
-//            }
-//        });
-//        waiter.await(5, SECONDS);
-//    }
 
-//    @Test
-//    @Category({ExternalDatabase.class})
-//    public void testEmptyQuery() throws Throwable {
-//        testStart();
-//        session.query(new SimpleQueryCommand("") {
-//            @Override
-//            public void onCompleted() {
-//                waiter.assertTrue(true);
-//                waiter.resume();
-//            }
-//        });
-//        waiter.await(5, SECONDS);
-//    }
+  @Override
+  public void setUp() throws Exception {
+    super.setUp();
+  }
+
+  @Test
+  public void testClient() throws Throwable {
+    client = new PGClient("localhost",5432);
+    waiter.assertNotNull(session = client.connect());
+    waiter.resume();
+    session.start(new StartupCommand("test", "test","test", UTF8));
+    waiter.await(300);
+    waiter.resume();
+    client.disconnect();
+  }
+
+    @Test
+    public void testStart() throws Throwable {
+        String username = props.getProperty("db.user");
+        String password = props.getProperty("db.password");
+        String database = props.getProperty("db.name");
+        session.start(new StartupCommand(username, password, database, UTF8) {
+            public void onCompleted() {
+                waiter.assertTrue(true);
+                waiter.resume();
+            }
+        });
+        waiter.await(5, SECONDS );
+    }
+
+    @Test
+    public void testEmptyQuery() throws Throwable {
+        testStart();
+        session.query(new SimpleQueryCommand("select 1", UTF8) {
+            @Override
+            public void onCompleted() {
+                waiter.assertTrue(true);
+                waiter.resume();
+            }
+        });
+        waiter.await(10, SECONDS);
+    }
 
 
 //    @Test

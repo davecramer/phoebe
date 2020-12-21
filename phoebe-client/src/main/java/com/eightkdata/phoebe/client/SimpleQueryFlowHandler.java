@@ -2,6 +2,7 @@ package com.eightkdata.phoebe.client;
 
 import com.eightkdata.phoebe.common.message.Message;
 import com.eightkdata.phoebe.common.message.MessageType;
+import com.eightkdata.phoebe.common.messages.ErrorResponse;
 import io.netty.channel.Channel;
 
 import java.nio.charset.Charset;
@@ -46,6 +47,15 @@ public class SimpleQueryFlowHandler extends FlowHandler {
             case NoticeResponse:
                 onNoticeResponse();
                 break;
+            case RowDescription:
+                onRowDescription();
+                break;
+            case DataRow:
+                onDataRow(message, encoding);
+                break;
+            case ReadyForQuery:
+                callback.onCompleted();
+                break;
             default:
                 throw new UnsupportedOperationException(message.getType().name() + " is not part of the startup message flow");
         }
@@ -59,6 +69,12 @@ public class SimpleQueryFlowHandler extends FlowHandler {
     }
 
 
+    public void onRowDescription() {
+
+    }
+    public void onDataRow(Message message, Charset encoding) {
+
+    }
     /**
      * Called when the server is ready to copy data from the client.
      */
@@ -81,7 +97,8 @@ public class SimpleQueryFlowHandler extends FlowHandler {
 
 
     public interface Callback {
-        void onCompleted(/* EmptyQueryResponse */);
+        void onCompleted();
+        void onErrorResponse(ErrorResponse errorResponse);
     }
 
 }

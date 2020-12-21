@@ -77,8 +77,8 @@ public class StartupMessage extends AbstractSetKeyValueMessage {
 
     static StartupMessage encode(
             @Nonnull ByteBufAllocator byteBufAllocator, @Nonnull Charset charset,
-            @Nonnull SessionParameters sessionParameters
-    ) {
+            @Nonnull SessionParameters sessionParameters) {
+
         // Validate input arguments
         checkNotNull(sessionParameters, "sessionParameters");
         checkNotNull(sessionParameters.getParameter(SessionParameters.USER), "sessionParameters.user");
@@ -90,10 +90,10 @@ public class StartupMessage extends AbstractSetKeyValueMessage {
         if(! sessionParameters.parameterIsSet(SessionParameters.CLIENT_ENCODING)) {
             parameters.put(SessionParameters.CLIENT_ENCODING, DEFAULT_ENCODING.name());
         }
-        if(! sessionParameters.parameterIsSet(SessionParameters.LC_MESSAGES)) {
+       /* if(! sessionParameters.parameterIsSet(SessionParameters.LC_MESSAGES)) {
             parameters.put(SessionParameters.LC_MESSAGES, DEFAULT_LC_MESSAGES);
         }
-
+*/
         return new StartupMessage(
                 encodeToByteBuf(byteBufAllocator, FIXED_CHARSET, parameters),
                 FIXED_CHARSET

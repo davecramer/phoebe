@@ -67,9 +67,12 @@ public class MessageEncoders {
      * @param sessionParameters the session parameters
      */
     public @Nonnull StartupMessage startupMessage(
-            @Nonnull Charset charset, @Nonnull SessionParameters sessionParameters
-    ) {
+            @Nonnull Charset charset, @Nonnull SessionParameters sessionParameters) {
         return StartupMessage.encode(byteBufAllocator, charset, sessionParameters);
     }
+    public @Nonnull SimpleQueryMessage simpleQueryMessage( String query){
+      return SimpleQueryMessage.encode(byteBufAllocator, query);
+    }
+
 
 }

@@ -18,8 +18,17 @@
 
 package com.eightkdata.phoebe.common.message;
 
-import com.google.common.base.MoreObjects;
+import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.eightkdata.phoebe.common.util.ByteBufAllocatorUtil;
+import com.eightkdata.phoebe.common.util.EncodingUtil;
+import com.google.common.base.MoreObjects;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
+import java.nio.charset.Charset;
+
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 /**
@@ -28,6 +37,19 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public abstract class AbstractMessage implements Message {
 
+    protected static ByteBuf encodeToByteBuf(@Nonnull ByteBufAllocator byteBufAllocator,
+        @Nonnull Charset charset,
+        String data){
+        // Validate input arguments
+        checkNotNull(data, "data");
+        checkNotNull(charset, "charset");
+        ByteBuf byteBuf = ByteBufAllocatorUtil.allocStringByteBuf(
+            byteBufAllocator, EncodingUtil.lengthCString(data, charset) + 1
+        );
+
+        EncodingUtil.writeCString(byteBuf, data, charset);
+        return byteBuf;
+    }
     @Override
     public String toString() {
         MoreObjects.ToStringHelper toStringHelper = MoreObjects.toStringHelper(getType().name());

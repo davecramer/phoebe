@@ -19,6 +19,7 @@
 package com.eightkdata.phoebe.client.api;
 
 import com.eightkdata.phoebe.client.FlowHandler;
+import com.eightkdata.phoebe.client.SimpleQueryFlowHandler;
 import com.eightkdata.phoebe.client.StartupFlowHandler;
 import com.eightkdata.phoebe.client.decoder.BeMessageDecoder;
 import com.eightkdata.phoebe.client.decoder.BeMessageProcessor;
@@ -27,6 +28,7 @@ import com.eightkdata.phoebe.client.encoder.FeMessageProcessor;
 import com.eightkdata.phoebe.common.SessionParameters;
 import com.eightkdata.phoebe.common.message.MessageHeaderEncoder;
 import com.eightkdata.phoebe.common.messages.MessageEncoders;
+import com.eightkdata.phoebe.common.messages.SimpleQueryMessage;
 import com.eightkdata.phoebe.common.messages.StartupMessage;
 import io.netty.channel.Channel;
 
@@ -73,7 +75,11 @@ public class PGSession {
         StartupMessage startupMessage = messageEncoders.startupMessage(command.getCharset(), sessionParameters);
         channel.writeAndFlush(startupMessage);
     }
-
+    public void query(SimpleQueryCommand command){
+        handlers.addFirst(new SimpleQueryFlowHandler(command));
+        SimpleQueryMessage simpleQueryMessage = messageEncoders.simpleQueryMessage( command.getQuery() );
+        channel.writeAndFlush(simpleQueryMessage);
+    }
     public void close() {
         // Release any acquired resources
         messageHeaderEncoder.releaseByteBufs();

@@ -85,7 +85,7 @@ public enum BeMessageType {
                 assert beMessageType.getSubtype() != null : "Auth be messages must have a subtype";
                 authMessageTypes.put(beMessageType.getSubtype(), beMessageType);
             } else {
-                assert beMessageType.getSubtype() == null : "Non auth be messages do not have subtype";
+                assert beMessageType.getSubtype() == -1: "Non auth be messages do not have subtype";
                 nonAuthMessageTypes.put(beMessageType.getId(), beMessageType);
             }
 

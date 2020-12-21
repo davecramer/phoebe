@@ -24,8 +24,12 @@
 
 package com.eightkdata.phoebe.common.messages;
 
+
+
+
 import com.eightkdata.phoebe.common.message.Message;
 import com.eightkdata.phoebe.common.message.MessageType;
+
 import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
@@ -36,17 +40,20 @@ import java.nio.charset.Charset;
  */
 public class MessageDecoders {
 
-    public static Message decode(@Nonnull MessageType messageType, @Nonnull ByteBuf byteBuf, @Nonnull Charset charset) {
-        switch (messageType) {
-            case AuthenticationMD5Password:     return new AuthenticationMD5Password(byteBuf);
-            case PasswordMessage:               return new PasswordMessage(byteBuf, charset);
-            case StartupMessage:                return new StartupMessage(byteBuf, charset);
-            case ParameterStatus:               return new ParameterStatus(byteBuf, charset);
-            case BackendKeyData:                return new BackendKeyData(byteBuf);
-            case ReadyForQuery:                 return new ReadyForQuery(byteBuf);
-
-            default:    throw new UnsupportedOperationException("No decoder for message type " + messageType);
-        }
+  public static Message decode(@Nonnull MessageType messageType, @Nonnull ByteBuf byteBuf, @Nonnull Charset charset) {
+    switch (messageType) {
+      case AuthenticationMD5Password:     return new AuthenticationMD5Password(byteBuf);
+      case PasswordMessage:               return new PasswordMessage(byteBuf, charset);
+      case StartupMessage:                return new StartupMessage(byteBuf, charset);
+      case ParameterStatus:               return new ParameterStatus(byteBuf, charset);
+      case BackendKeyData:                return new BackendKeyData(byteBuf);
+      case ReadyForQuery:                 return new ReadyForQuery(byteBuf);
+      case ErrorResponse:                 return new ErrorResponse(byteBuf);
+      case DataRow:                       return new DataRow(byteBuf);
+      case RowDescription:                return new RowDescription(byteBuf);
+      case CommandComplete:               return new CommandComplete(byteBuf);
+      default:    throw new UnsupportedOperationException("No decoder for message type " + messageType);
     }
+  }
 
 }

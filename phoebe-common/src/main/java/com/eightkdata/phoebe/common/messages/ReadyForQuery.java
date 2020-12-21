@@ -99,11 +99,16 @@ public final class ReadyForQuery extends AbstractByteBufMessage {
         // Probably getByByte() should rather return null and throw a MessageDecodingException or similar
 
         return StatusIndicator.getByByte(byteBuf.readByte());
+
     }
 
     @Override
     public void fillInPayloadInformation(MoreObjects.ToStringHelper toStringHelper) {
         toStringHelper.add("status_indicator", getStatusIndicator());
+    }
+    @Override
+    public String toString() {
+      return "ReadyForQuery";
     }
 
 }

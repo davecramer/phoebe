@@ -27,6 +27,7 @@ package com.eightkdata.phoebe.client;
 import com.eightkdata.phoebe.common.message.Message;
 import com.eightkdata.phoebe.common.message.MessageType;
 import com.eightkdata.phoebe.common.messages.AuthenticationMD5Password;
+import com.eightkdata.phoebe.common.messages.ErrorResponse;
 import com.eightkdata.phoebe.common.messages.MessageEncoders;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.Channel;
@@ -93,12 +94,18 @@ public class StartupFlowHandler extends FlowHandler {
             case ReadyForQuery:
                 onReadyForQuery();
                 break;
+            case ErrorResponse:
+                onErrorResponse(channel, (ErrorResponse)message);
+                break;
             default:
                 throw new UnsupportedOperationException(message.getType().name() + " is not part of the startup message flow");
         }
         return false;
     }
 
+    public void onErrorResponse(Channel channel, ErrorResponse message) {
+
+    }
     public void onParameterStatus() {
         // Do nothing, needs no reply.
         // TODO: provide a callback to update session information with the value of these parameters
@@ -110,7 +117,7 @@ public class StartupFlowHandler extends FlowHandler {
     }
 
     public void onReadyForQuery() {
-        // TODO: report to the flow we're ready for user queries
+        callback.onCompleted();
     }
 
     /**
@@ -147,8 +154,9 @@ public class StartupFlowHandler extends FlowHandler {
     public interface Callback {
         String getUsername();
         String getPassword();
-
-
+        void onCompleted();
+    //    void onNoticeResponse(NoticeResponse noticeResponse);
+        void onErrorResponse(ErrorResponse errorResponse);
         // todo: onNoticeResponse
     }
 

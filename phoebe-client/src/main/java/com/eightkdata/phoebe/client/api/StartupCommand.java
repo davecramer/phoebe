@@ -21,6 +21,8 @@ package com.eightkdata.phoebe.client.api;
 
 import com.eightkdata.phoebe.client.StartupFlowHandler;
 import com.eightkdata.phoebe.common.PostgresEncoding;
+import com.eightkdata.phoebe.common.messages.ErrorResponse;
+import com.eightkdata.phoebe.common.messages.ReadyForQuery;
 
 import javax.annotation.Nonnull;
 import java.nio.charset.Charset;
@@ -49,6 +51,15 @@ public class StartupCommand implements StartupFlowHandler.Callback {
 
     public Charset getCharset() {
         return encoding.getCharset();
+    }
+
+    @Override
+    public void onCompleted() {
+    }
+
+    @Override
+    public void onErrorResponse(ErrorResponse errorResponse) {
+
     }
 
     @Override
